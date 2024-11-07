@@ -1,0 +1,48 @@
+name: Build LaTeX and deploy on GitHub Releases
+on:
+  push:
+    tags: '*'
+    branches-ignore:
+      - 'autodelivery**'
+      - 'bump-**'
+      - 'renovate/**'
+    paths-ignore:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'LICENSE'
+      - 'renovate.json'
+  pull_request:
+  workflow_dispatch:
+
+permissions: { }
+
+jobs:
+  success:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0
+
+      - name: Install dependencies
+        run: |
+          gem install bibtex-ruby
+
+      - name: Generate bibliography
+        run: |
+          ruby bibtex_prettifier.rb
+
+      - name: Camera Ready
+        run: |
+          ruby check-acknowledgements.rb paper-xxxx-venue-topic.tex
+
+      - name: Compile and publish all LaTeX
+        uses: DanySK/compile-and-publish-all-latex@2.0.31
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

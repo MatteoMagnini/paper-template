@@ -8,27 +8,31 @@ end
 
 new_name = ARGV[0]
 
-# Define file names based on the original name pattern
-tex_file_pattern = /paper-\d{4}-\w+-\w+\.tex/
-sty_file_pattern = /paper-\d{4}-\w+-\w+\.sty/
+# Define the workflow YAML file
 yaml_file = ".github/workflows/build-and-deploy-latex.yml"
 
-# Find the original .tex and .sty files
-tex_file = Dir.glob("*.tex").find { |f| f =~ tex_file_pattern }
-sty_file = Dir.glob("*.sty").find { |f| f =~ sty_file_pattern }
+# Search for the .tex and .sty files matching the pattern
+tex_file = Dir.glob("paper-*.tex").find { |f| f =~ /paper-\d{4}-\w+-\w+\.tex/ }
+sty_file = Dir.glob("paper-*.sty").find { |f| f =~ /paper-\d{4}-\w+-\w+\.sty/ }
 
-# Verify the existence of required files
-if tex_file.nil? || sty_file.nil? || !File.exist?(yaml_file)
-  puts "Error: Required files (#{tex_file_pattern}, #{sty_file_pattern}, and #{yaml_file}) not found."
+# Verify both files were found
+if tex_file.nil? || sty_file.nil?
+  puts "Error: Required .tex or .sty files not found with expected pattern 'paper-xxxx-venue-topic'."
   exit 1
 end
 
-# Extract the original base name from the tex file
+# Extract the original base name
 original_base_name = tex_file.sub(/\.tex$/, '')
 
 # Define new file names based on the new base name
 new_tex_file = "#{new_name}.tex"
 new_sty_file = "#{new_name}.sty"
+
+# Check if the YAML file exists
+unless File.exist?(yaml_file)
+  puts "Error: Workflow file '#{yaml_file}' not found."
+  exit 1
+end
 
 begin
   # Rename .tex and .sty files

@@ -1,4 +1,4 @@
-# Latex Paper Template for scientific papers
+# Latex Github Template for Scientific Papers
 
 ## Motivation
 If you use github to write your scientific papers, you may want some features already at your disposal.

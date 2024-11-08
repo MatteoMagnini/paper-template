@@ -74,17 +74,9 @@
         %
         \subsection{Automatic Release}\label{subsec:automatic-release}
             %
-            Danilo's action (credit to him) -- DanySK/compile-and-publish-all-latex -- is used to compile the \LaTeX{} file and release the PDF.
+            The github workflow is defined in the file \texttt{.github/workflows/build-and-deploy-latex.yml}.
             %
-            Check the documentation of the action for more information.
-
-            \textbf{Disclaimer}: if you have multiple \texttt{.tex} files in your repository, the action will compile and publish all of them.
-            %
-            If for some reason a \texttt{.tex} file is not a source file (e.g., it contains only a \LaTeX table, figures, etc.), you must specify that.
-            %
-            To do so, add the following line at the beginning of the file: \texttt{\% !TeX root = path-to-the-source-file/source-file.tex}.
-
-            The output files are actually two: the paper-xxxx-venue-topic.pdf and the paper-xxxx-venue-topic-camera-ready.pdf.
+            If everything is fine, it generates two compiled files: paper-xxxx-venue-topic.pdf and paper-xxxx-venue-topic-camera-ready.pdf.
             %
             The second file is the same as the first one, but it has been processed by the script \texttt{check\_acknowledgements.rb}.
             %
@@ -93,6 +85,7 @@
             \begin{itemize}
                 %
                 \item checks if the string ``\% NO ACKNOWLEDGEMENTS \%'' is present in the acknowledgements section.
+                %
                 If it is, the script just copies the file to the camera-ready version;
                 %
                 \item if the file has no acknowledgements section, it prints an error message and stops;
@@ -100,6 +93,7 @@
                 \item if the file has an acknowledgements section, it prints a warning message and copies the file to the camera-ready version.
                 %
                 \item if the file has a commented acknowledgements section, it copies the file to the camera-ready version without the comments.
+                %
             \end{itemize}
 
         \subsection{Automatic Bibliographic Checks and Fixes}\label{subsec:automatic-checks-and-fixes-on-the-bibliography}

@@ -8,31 +8,24 @@ end
 
 new_name = ARGV[0]
 
-# Define the workflow YAML file
+# Define specific filenames for the LaTeX files, YAML file, and .gitignore
+tex_file = "paper-xxxx-venue-topic.tex"
+sty_file = "paper-xxxx-venue-topic.sty"
 yaml_file = ".github/workflows/build-and-deploy-latex.yml"
+gitignore_file = ".gitignore"
 
-# Search for the .tex and .sty files matching the pattern
-tex_file = Dir.glob("paper-*.tex").find { |f| f =~ /paper-\d{4}-\w+-\w+\.tex/ }
-sty_file = Dir.glob("paper-*.sty").find { |f| f =~ /paper-\d{4}-\w+-\w+\.sty/ }
-
-# Verify both files were found
-if tex_file.nil? || sty_file.nil?
-  puts "Error: Required .tex or .sty files not found with expected pattern 'paper-xxxx-venue-topic'."
+# Verify that the required .tex, .sty, YAML, and .gitignore files exist
+unless File.exist?(tex_file) && File.exist?(sty_file) && File.exist?(yaml_file) && File.exist?(gitignore_file)
+  puts "Error: One or more required files (#{tex_file}, #{sty_file}, #{yaml_file}, #{gitignore_file}) are missing."
   exit 1
 end
 
-# Extract the original base name
+# Extract the original base name from the .tex file
 original_base_name = tex_file.sub(/\.tex$/, '')
 
 # Define new file names based on the new base name
 new_tex_file = "#{new_name}.tex"
 new_sty_file = "#{new_name}.sty"
-
-# Check if the YAML file exists
-unless File.exist?(yaml_file)
-  puts "Error: Workflow file '#{yaml_file}' not found."
-  exit 1
-end
 
 begin
   # Rename .tex and .sty files
@@ -47,10 +40,14 @@ begin
   yaml_content = File.read(yaml_file).gsub(/PAPER_BASE_NAME:\s*#{Regexp.escape(original_base_name)}/, "PAPER_BASE_NAME: #{new_name}")
   File.write(yaml_file, yaml_content)
 
+  # Update the .gitignore file
+  gitignore_content = File.read(gitignore_file).gsub(/#{Regexp.escape(original_base_name)}/, new_name)
+  File.write(gitignore_file, gitignore_content)
+
   # Remove this script if everything is successful
   File.delete(__FILE__)
 
-  puts "Successfully renamed files and updated references to '#{new_name}'."
+  puts "Successfully renamed files, updated references, and modified .gitignore with '#{new_name}'."
 rescue => e
   puts "Error: #{e.message}"
   exit 1

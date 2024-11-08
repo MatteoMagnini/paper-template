@@ -112,6 +112,20 @@
                 %
             \end{itemize}
 
+    \section{Conclusion}\label{sec:conclusion}
+    %
+    Before starting to write your paper, you should run the rename.rb script.
+    %
+    This script renames the \texttt{paper-xxxx-venue-topic.tex} and \texttt{paper-xxxx-venue-topic.sty} files to the new file name that you must provide as input argument to the script.
+    %
+    It also automatically updates all the references in the other files.
+    %
+    Beware that the script will also remove the commented acknowledgements section in the \texttt{paper-xxxx-venue-topic.tex} file.
+    %
+    In this way the \textbf{CI will fail} if you do not provide an -- possibly commented -- acknowledgements section or you do not provide the string ``\% NO ACKNOWLEDGEMENTS \%'' in the acknowledgements section.
+    %
+    Finally, the script will delete itself.
+
 %    \section{Acknowledgements}\label{sec:acknowledgements}
 %        %
 %        This work has been partially supported by XXX.

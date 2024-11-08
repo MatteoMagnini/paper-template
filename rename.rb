@@ -34,6 +34,8 @@ begin
 
   # Update \usepackage{...} in the .tex file
   tex_content = File.read(new_tex_file).gsub(/\\usepackage\{#{Regexp.escape(original_base_name)}\}/, "\\usepackage{#{new_name}}")
+  # Remove the acknowledgments section if it’s commented out
+  tex_content.gsub!(/^%\s*\\section\{(Acknowledgements|Fundings)\}.*(\n%.*)*\n\s*\n/, '')
   File.write(new_tex_file, tex_content)
 
   # Update PAPER_BASE_NAME in the YAML workflow file

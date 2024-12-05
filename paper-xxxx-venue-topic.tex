@@ -31,7 +31,9 @@
             %
             It also performs automatic checks on the bibliography.
             %
-            With this, I hope to make the life of researchers a bit easier.
+            For this reason, this template cites some of my papers like~\cite{DBLP:conf/atal/MagniniCO22,DBLP:journals/logcom/MagniniCO23}.
+            %
+            With this repository, I hope to make the life of researchers a bit easier.
             %
         \end{abstract}
 
@@ -50,6 +52,8 @@
             %
             Change the name of this file to match the year (xxxx), venue, and topic of your paper.
             %
+            This is done automatically by running the script \texttt{rename.rb}.
+            %
             \item[] \texttt{paper-xxxx-venue-topic.sty} is the style file.
             %
             Also change the name of this file to match the year (xxxx), venue, and topic of your paper.
@@ -67,10 +71,12 @@
             \item[] \texttt{tables} is the directory where you can store your tables.
             %
         \end{itemize}
+    %
+    Some other random citations~\cite{DBLP:conf/percom/MontagnaAFPKUM24,DBLP:conf/dlog/MagniniOS24}
 
     \section{Quirks}\label{sec:quirks}
         %
-        There are two main features of this template: automatic release of the compiled PDF on GitHub Actions and automatic checks and fixes on the bibliography.
+        There are three main features of this template: i) automatic release of the compiled PDF on GitHub Actions, ii) automatic checks and fixes on the bibliography, and iii) checks on acknowledgements.
         %
         \subsection{Automatic Release}\label{subsec:automatic-release}
             %
@@ -110,6 +116,7 @@
                 %
                 \item it also checks if a bibtex entry has both \texttt{doi} and \texttt{url} fields, and it removes the \texttt{url} field (this is done because it is redundant and many bibtex styles render two links, which is not good).
                 %
+                \item if a bibtex entry has no \texttt{doi} or \texttt{url} fields, the script prints a warning message if the comment \texttt{\% ALLOW NO DOI OR URL\%} is present in the .tex file, otherwise the CI will fail with error.
             \end{itemize}
 
     \section{Conclusion}\label{sec:conclusion}
@@ -125,6 +132,8 @@
     In this way the \textbf{CI will fail} if you do not provide an -- possibly commented -- acknowledgements section or you do not provide the string ``\% NO ACKNOWLEDGEMENTS \%'' in the acknowledgements section.
     %
     Finally, the script will delete itself.
+
+    This is a must-read paper~\cite{DBLP:journals/csur/CiattoSAMO24} if you are into neuro-symbolic AI.
 
 %    \section{Acknowledgements}\label{sec:acknowledgements}
 %        %

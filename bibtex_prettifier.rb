@@ -54,6 +54,41 @@ def remove_duplicates(bib)
   unique_entries
 end
 
+# Check references for missing DOI or URL and handle skipped entries
+def check_missing_identifiers(bib, tex_file)
+  missing_identifiers = []
+  skip_references = extract_skip_references(tex_file)
+
+  bib.each do |entry|
+    next unless entry.is_a?(BibTeX::Entry)
+
+    if !entry.has_field?('doi') && !entry.has_field?('url')
+      if skip_references.include?(entry.key)
+        puts "Warning: Reference '#{entry.key}' is missing DOI/URL but is skipped due to comment."
+      else
+        missing_identifiers << entry.key
+      end
+    end
+  end
+
+  if missing_identifiers.any?
+    raise "Error: The following references are missing DOI/URL: #{missing_identifiers.join(', ')}"
+  end
+end
+
+# Extract skipped references based on comments in the .tex file
+def extract_skip_references(tex_file)
+  skip_references = []
+  File.foreach(tex_file) do |line|
+    if line =~ /% skip reference: (\w+)/
+      skip_references << Regexp.last_match(1)
+    end
+  end
+  skip_references
+end
+
+# Load the .tex file
+tex_file = "paper-xxxx-venue-topic.tex"
 # Load BibTeX file
 bibfile = "biblio.bib"
 bib = BibTeX.open(bibfile)
@@ -71,5 +106,8 @@ File.open(output_file, 'w') do |f|
   f.write(acronyms.to_s)     # Write the acronym definitions first
   f.write(references.to_s)   # Write the cleaned references
 end
+
+# Check for missing identifiers in the references
+check_missing_identifiers(references, tex_file)
 
 puts "BibTeX file #{output_file} has been updated"

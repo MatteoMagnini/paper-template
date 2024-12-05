@@ -46,6 +46,10 @@ begin
   gitignore_content = File.read(gitignore_file).gsub(/#{Regexp.escape(original_base_name)}/, new_name)
   File.write(gitignore_file, gitignore_content)
 
+  # Update bibtext_prettifier.rb file
+  bibtex_prettifier_file = "bibtex_prettifier.rb"
+  bibtex_prettifier_content = File.read(bibtex_prettifier_file).gsub(/tex_file = "#{Regexp.escape(original_base_name)}.tex"/, "tex_file = \"#{new_name}.tex\"")
+
   # Remove this script if everything is successful
   File.delete(__FILE__)
 

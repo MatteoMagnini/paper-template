@@ -70,7 +70,7 @@ def check_missing_identifiers(bib, tex_file)
     next unless entry.is_a?(BibTeX::Entry)
 
     if !entry.has_field?('doi') && !entry.has_field?('url')
-      if skip_references.include?(entry.key)
+      if skip_references
         puts "Warning: Reference '#{entry.key}' is missing DOI/URL but is skipped due to comment."
       else
         missing_identifiers << entry.key

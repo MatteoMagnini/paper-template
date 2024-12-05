@@ -59,7 +59,7 @@ def check_missing_identifiers(bib, tex_file)
   missing_identifiers = []
   # Read the file
   begin
-    content = File.read(file_name)
+    content = File.read(tex_file)
   rescue Errno::ENOENT
     puts "Error: File '#{file_name}' not found."
     exit 1

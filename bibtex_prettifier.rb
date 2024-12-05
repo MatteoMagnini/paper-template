@@ -57,7 +57,14 @@ end
 # Check references for missing DOI or URL and handle skipped entries
 def check_missing_identifiers(bib, tex_file)
   missing_identifiers = []
-  skip_references = extract_skip_references(tex_file)
+  # Read the file
+  begin
+    content = File.read(file_name)
+  rescue Errno::ENOENT
+    puts "Error: File '#{file_name}' not found."
+    exit 1
+  end
+  skip_references = content.include?("% ALLOW MISSING DOI AND URL %")
 
   bib.each do |entry|
     next unless entry.is_a?(BibTeX::Entry)
@@ -74,17 +81,6 @@ def check_missing_identifiers(bib, tex_file)
   if missing_identifiers.any?
     raise "Error: The following references are missing DOI/URL: #{missing_identifiers.join(', ')}"
   end
-end
-
-# Extract skipped references based on comments in the .tex file
-def extract_skip_references(tex_file)
-  skip_references = []
-  File.foreach(tex_file) do |line|
-    if line =~ /% skip reference: (\w+)/
-      skip_references << Regexp.last_match(1)
-    end
-  end
-  skip_references
 end
 
 # Load the .tex file

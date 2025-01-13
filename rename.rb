@@ -49,6 +49,7 @@ begin
   # Update bibtext_prettifier.rb file
   bibtex_prettifier_file = "bibtex_prettifier.rb"
   bibtex_prettifier_content = File.read(bibtex_prettifier_file).gsub(/tex_file = "#{Regexp.escape(original_base_name)}.tex"/, "tex_file = \"#{new_name}.tex\"")
+  File.write(bibtex_prettifier_file, bibtex_prettifier_content)
 
   # Remove this script if everything is successful
   File.delete(__FILE__)

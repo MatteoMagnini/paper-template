@@ -45,7 +45,7 @@ jobs:
 
       - name: Camera Ready
         run: |
-          ruby check-acknowledgements.rb paper-xxxx-venue-topic.tex
+          ruby check-acknowledgements.rb ${{ env.PAPER_BASE_NAME }}.tex
 
       - name: Build peer review paper
         uses: xu-cheng/latex-action@v3

@@ -23,9 +23,15 @@ end
 # Flag variables for different cases
 has_no_acknowledgements_comment = content.include?("% NO ACKNOWLEDGEMENTS %")
 # Define regex patterns to capture acknowledgements and funding sections
-acknowledgements_regex = /(?<!%)\b\\(section|subsection|subsubsection|paragraph|subparagraph)\s*\{\s*(Acknowledgement|Acknowledgements|Funding|Fundings|Thanks|Sponsorship|Sponsor)\s*\}.*?(?=\n\s*\n)/im
+acknowledgements_regex = /
+  (?<!%)
+  \\(section|subsection|subsubsection|paragraph|subparagraph)
+  \s*\{\s*(Acknowledgement|Acknowledgements|Funding|Fundings|Thanks|Sponsorship|Sponsor)\s*\}
+  .*?
+  (?=\\(section|subsection|subsubsection|paragraph|subparagraph)|\z)
+/imx
 thanks_command_regex = /(?<!%)\b\\thanks\s*\{.*?\}/i
-commented_acknowledgements_regex = /(^\s*%+\s*\\(section|subsection|subsubsection|paragraph|subparagraph)\s*\{\s*(Acknowledgement|Acknowledgements|Funding|Fundings|Thanks|Sponsorship|Sponsor)\s*\}.*?(?=\n\s*\n))/im
+commented_acknowledgements_regex = /(^\s*%+\s*\\(section|subsection|subsubsection|paragraph|subparagraph)\s*\{\s*(Acknowledgement|Acknowledgements|Funding|Fundings|Thanks|Sponsorship|Sponsor)\s*\}.*?(?=\\(section|subsection|subsubsection|paragraph|subparagraph)|\z))/im
 commented_thanks_command_regex = /(^\s*%+\s*\\thanks\s*\{.*?\})/i
 
 # Flag variables for different cases

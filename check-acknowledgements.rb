@@ -25,7 +25,7 @@ has_no_acknowledgements_comment = content.include?("% NO ACKNOWLEDGEMENTS %")
 # Define regex patterns to capture acknowledgements and funding sections
 acknowledgements_regex = /
   (?<!%)
-  \\(section|subsection|subsubsection|paragraph|subparagraph)
+  \\(section|subsection|subsubsection|paragraph|subparagraph)\*?
   \s*\{\s*(Acknowledgement|Acknowledgements|Funding|Fundings|Thanks|Sponsorship|Sponsor)\s*\}
   .*?
   (?=\\(section|subsection|subsubsection|paragraph|subparagraph)|\z)

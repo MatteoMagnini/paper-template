@@ -43,9 +43,15 @@ jobs:
         run: |
           ruby bibtex_prettifier.rb
 
-      - name: Camera Ready
+      - name: Check for acknowledgements
+        id: check_ack
         run: |
-          ruby check-acknowledgements.rb ${{ env.PAPER_BASE_NAME }}.tex
+          if ruby check-acknowledgements.rb ${{ env.PAPER_BASE_NAME }}.tex; then
+            echo "ack_ok=true" >> $GITHUB_OUTPUT
+          else
+            echo "WARNING: Acknowledgements section not found. Skipping camera ready build."
+            echo "ack_ok=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build peer review paper
         uses: xu-cheng/latex-action@v3
@@ -54,10 +60,23 @@ jobs:
           args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
 
       - name: Build camera ready paper
+        if: steps.check_ack.outputs.ack_ok == 'true'
         uses: xu-cheng/latex-action@v3
         with:
           root_file: ${{ env.PAPER_BASE_NAME }}-camera-ready.tex
           args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
+
+      - name: Upload Release Asset camera ready paper
+        if: steps.check_ack.outputs.ack_ok == 'true'
+        id: upload-release-asset-publications
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
+          asset_name: ${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
+          asset_content_type: application/pdf
 
       - name: Bump version
         id: bump-version
@@ -88,15 +107,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./${{ env.PAPER_BASE_NAME }}.pdf
           asset_name: ${{ env.PAPER_BASE_NAME }}.pdf
-          asset_content_type: application/pdf
-
-      - name: Upload Release Asset camera ready paper
-        id: upload-release-asset-publications
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
-          asset_name: ${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
           asset_content_type: application/pdf

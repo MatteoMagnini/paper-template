@@ -40,6 +40,8 @@ begin
 
   # Update PAPER_BASE_NAME in the YAML workflow file
   yaml_content = File.read(yaml_file).gsub(/PAPER_BASE_NAME:\s*#{Regexp.escape(original_base_name)}/, "PAPER_BASE_NAME: #{new_name}")
+  # Remove the scheduled cron job if present
+  yaml_content.gsub!(/^  schedule:.*?\n(?:    - cron:.*?\n)+/m, '')
   File.write(yaml_file, yaml_content)
 
   # Update the .gitignore file

@@ -66,18 +66,6 @@ jobs:
           root_file: ${{ env.PAPER_BASE_NAME }}-camera-ready.tex
           args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
 
-      - name: Upload Release Asset camera ready paper
-        if: steps.check_ack.outputs.ack_ok == 'true'
-        id: upload-release-asset-publications
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
-          asset_name: ${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
-          asset_content_type: application/pdf
-
       - name: Bump version
         id: bump-version
         uses: anothrNick/github-tag-action@1.71.0
@@ -99,7 +87,7 @@ jobs:
           release_name: '${{ steps.bump-version.outputs.new_tag }}-${{ steps.current-time.outputs.time }}'
 
       - name: Upload Release Asset peer review paper
-        id: upload-release-asset-cv
+        id: upload-release-asset-paper
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -107,4 +95,17 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./${{ env.PAPER_BASE_NAME }}.pdf
           asset_name: ${{ env.PAPER_BASE_NAME }}.pdf
+          asset_content_type: application/pdf
+
+
+      - name: Upload Release Asset camera ready paper
+        if: steps.check_ack.outputs.ack_ok == 'true'
+        id: upload-release-asset-publications
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
+          asset_name: ${{ env.PAPER_BASE_NAME }}-camera-ready.pdf
           asset_content_type: application/pdf
